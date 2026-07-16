@@ -256,7 +256,7 @@ def build_total_output_array(pokearray, base_index = 0, target_index = 0, forme_
         temp_array.append([index, 'Height', from_little_bytes_int(personal[0x24:0x26])])
 
         #Weight (decimeters)
-        temp_array.append([index, 'Weight', from_little_bytes_int(personal[0x24:0x26])])
+        temp_array.append([index, 'Weight', from_little_bytes_int(personal[0x26:0x28])])
         
         #Special Z-Move
         if(pokearray.game in {'SM', 'USUM'}):
@@ -292,7 +292,7 @@ def build_total_output_array(pokearray, base_index = 0, target_index = 0, forme_
                 if(byte_value & (1 << bit_position) == (1 << bit_position)):
                     #Index, TM/HM, [TM][HM] XXX, move name
                     try:
-                        temp_array.append([index, 'TM/HM', pokearray.tm_name_list[bit_count][0], pokearray.tm_name_list[bit_count][1]])
+                        temp_array.append([index, 'TM/HM', f'TM{bit_count + 1:03}', pokearray.tm_name_list[bit_count]])
                     except:
                         pass
                 bit_count += 1
@@ -303,9 +303,9 @@ def build_total_output_array(pokearray, base_index = 0, target_index = 0, forme_
         #iterate through the bits of current byte
         for bit_position in range(8):
             #check if this bit is 1
-            if(personal[0x35] & (1 << bit_position) == (1 << bit_position)):
+            if(personal[0x38] & (1 << bit_position) == (1 << bit_position)):
                 #Index, TM/HM, Tutor Name, move name
-                temp_array.append([index, 'Move Tutor', pokearray.special_tutor_name_list[bit_count][0], pokearray.special_tutor_name_list[bit_count][1]])
+                temp_array.append([index, 'Move Tutor', 'Special', pokearray.special_tutor_name_list[bit_count]])
             bit_count += 1
 
         #finally the BP move tutors. Depends on ORAS or USUM
@@ -324,12 +324,22 @@ def build_total_output_array(pokearray, base_index = 0, target_index = 0, forme_
                         temp_array.append([index, 'Move Tutor', 1 if bit_count <= 15 else 2 if bit_count <= 31 else 3 if bit_count <= 48 else 4, pokearray.bp_tutor_move_name_list[bit_count]])
                     bit_count += 1
 
-        #todo for USUM open shop.cro, grab the relocation patch values for the 4 tutors and the table of lengths, and use that instead of hardcoded table
 
         elif(pokearray.game == 'USUM'):
             bit_count = 0
-            for offset in range(9):
-                byte_value = personal[0x40 + offset]
+            for offset in range(16):
+                byte_value = personal[0x3C + offset]
+
+                #iterate through the bits of current byte
+                for bit_position in range(8):
+                    #check if this bit is 1
+                    if(byte_value & (1 << bit_position) == (1 << bit_position)):
+                        #Index, TM/HM, [TM][HM] XXX, move name
+                        temp_array.append([index, 'Move Tutor', 'BP', pokearray.bp_tutor_move_name_list[bit_count]])
+                    bit_count += 1
+
+            for offset in range(3):
+                byte_value = personal[0x39 + offset]
 
                 #iterate through the bits of current byte
                 for bit_position in range(8):

@@ -9,6 +9,9 @@ class Pokedata:
         self.evolution_path = ''
         self.egg_path = ''
         self.mega_path = ''
+        
+        self.egg_path = ''
+        self.mega_path = ''
 
         self.move_path = ''
 
@@ -27,7 +30,7 @@ class Pokedata:
         self.move_raw = []
         
         self.tm_name_list = []
-        self.special_tutor_name_list = []
+        self.special_tutor_name_list = ['Grass Pledge', 'Fire Pledge',	'Water Pledge', 'Frenzy Plant', 'Blast Burn', 'Hydro Cannon', 'Draco Meteor', 'Dragon Ascent']
 
         self.bp_tutor_move_name_list = []
         
@@ -46,6 +49,11 @@ class Pokedata:
         self.evolution_chain_from = []
 
         self.egg_array = []
+
+        self.trainer_list = []
+
+        self.trainer_pokemon_list = []
+
 
 
 type_list = ['Normal','Fighting','Flying','Poison','Ground','Rock','Bug','Ghost','Steel','Fire','Water','Grass','Electric','Psychic','Ice','Dragon','Dark','Fairy']

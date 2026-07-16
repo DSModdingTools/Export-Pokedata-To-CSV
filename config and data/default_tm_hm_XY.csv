@@ -91,7 +91,7 @@ TM 090,Substitute
 TM 091,Flash Cannon
 TM 092,Trick Room
 TM 093,Wild Charge
-TM 094,Secret Power
+TM 094,Rock Smash
 TM 095,Snarl
 TM 096,Nature Power
 TM 097,Dark Pulse
@@ -103,14 +103,6 @@ HM 002,Fly
 HM 003,Surf
 HM 004,Strength
 HM 005,Waterfall
-HM 006,Rock Smash
-HM 007,Dive
+HM 006,
+HM 007,
 HM 008,
-Pledges,Grass Pledge
-Pledges,Fire Pledge
-Pledges,Water Pledge
-Ultimates,Frenzy Plant
-Ultimates,Blast Burn
-Ultimates,Hydro Cannon
-Draco Meteor,Draco Meteor
-Dragon Ascent,Dragon Ascent

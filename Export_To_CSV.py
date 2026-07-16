@@ -143,8 +143,9 @@ def main():
     print('Loaded Item Name List')
 
     #load TM/HM/Special Tutor names
-    pokearray.tm_name_list, pokearray.special_tutor_name_list = get_default_custom_csv('tm_hm_special_tutor_list', reference_directory, pokearray.game, dual_bool = True)
-    print('Loaded TM/HM/Special Tutor Move Name Lists')
+    if(pokearray.game != 'USUM'):
+        pokearray.tm_name_list= get_default_custom_csv('tm_hm_list', reference_directory, pokearray.game)
+        print('Loaded TM/HM/Special Tutor Move Name Lists')
 
     
     #Get ROM paths
@@ -278,7 +279,41 @@ def main():
             for x in table_2:
                 pokearray.bp_tutor_move_name_list.append(pokearray.move_name_list[x])
 
+            #TM/HM
+            #get table locations
 
+            table_1_offset = from_little_bytes_int(binary_file_to_array(code_file_path, offset = 0x00276444, read_length = 4)) - 0x100000
+            table_2_offset = from_little_bytes_int(binary_file_to_array(code_file_path, offset = 0x00276440, read_length = 4)) - 0x100000
+
+            table_1_length = 0x6B
+            table_2_length = 0x15
+
+            #value if not extended
+            if(table_1_offset == 0xE3540064):
+                #tm
+                table_1_offset = from_little_bytes_int(binary_file_to_array(code_file_path, offset = 0x00276464, read_length = 4)) - 0x100000
+                #hm
+                table_2_offset = from_little_bytes_int(binary_file_to_array(code_file_path, offset = 0x00276460, read_length = 4)) - 0x100000
+
+                table_1_length = 0x64
+                table_2_length = 0x07
+
+
+            tm_table_1 = convert_bytes_to_ntuples(binary_file_to_array(code_file_path, offset = table_1_offset, read_length = table_1_length*2), 2)
+            tm_table_2 = convert_bytes_to_ntuples(binary_file_to_array(code_file_path, offset = table_2_offset, read_length = table_2_length*2), 2)
+
+                
+            for x in tm_table_1:
+                if(not(x in {0, 0xCCCC, 0xFFFF})):
+                    pokearray.tm_name_list.append(pokearray.move_name_list[x])
+                else:
+                    break
+            for x in tm_table_2:
+                if(not(x in {0, 0xCCCC, 0xFFFF})):
+                    pokearray.tm_name_list.append(pokearray.move_name_list[x])
+                else:
+                    break
+            print('Loaded TM/HM/Tutor Lists')
 
 
             
