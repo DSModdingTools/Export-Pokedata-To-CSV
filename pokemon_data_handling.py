@@ -219,9 +219,11 @@ def build_total_output_array(pokearray, base_index = 0, target_index = 0, forme_
         for x in range(3):
             #handles expanded 2-byte abilities, the 3 bytes used are 0 so shouldn't cause issues for vanilla
             try:
-                temp_array.append([index, 'Ability ' + str(x + 1), pokearray.ability_name_list[personal[0x18 + x] + ((personal[0x53] >> x) & 0x1)]]) # for when hidin finishes fixing his thing(((personal[0x53]) if x == 0 else personal[0x1E + x - 1])  << 8)]])
+                temp_array.append([index, 'Ability ' + str(x + 1), pokearray.ability_name_list[personal[0x18 + x] + ((personal[0x52] >> (x + 1)) & 0x1)*256]]) # for when hidin finishes fixing his thing(((personal[0x53]) if x == 0 else personal[0x1E + x - 1])  << 8)]])
             except Exception as e:
-                print(f'Exception {e}.\nIndex {index}, Ability index {personal[0x18 + x] + (((personal[0x53]) if x == 0 else personal[0x1E + x - 1])  << 8)}')
+                print(f'Exception {e}.\nPokemon {index}, Slot {x}, Ability # {256*((personal[0x52] >> (x + 1)) & 0x1)}, {0x18 + x} value is {personal[0x18 + x]}, 0x53 is {personal[0x53]}->{(personal[0x53] >> (x + 1)) & 0x1}->{256*((personal[0x53] >> (x + 1)) & 0x1)}')
+
+                input('Continue?')
                 
 
         #Egg Groups
@@ -587,7 +589,7 @@ def build_summary_output_array(pokearray):
 
         #Abilities
         for x in range(3):
-            temp_array.append([index, 'Ability ' + str(x + 1), pokearray.ability_name_list[personal[0x18 + x] + ((personal[0x53] >> x) & 0x1)]]) # for when hidin finishes fixing his thing(((personal[0x53]) if x == 0 else personal[0x1E + x - 1])  << 8)]])
+            temp_array.append(pokearray.ability_name_list[personal[0x18 + x] + ((personal[0x52] >> (x + 1)) & 0x1)*256]) # for when hidin finishes fixing his thing(((personal[0x53]) if x == 0 else personal[0x1E + x - 1])  << 8)]])
         
         #Special Z-Move
         if(pokearray.game in {'SM', 'USUM'}):
