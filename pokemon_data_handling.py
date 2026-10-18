@@ -217,7 +217,12 @@ def build_total_output_array(pokearray, base_index = 0, target_index = 0, forme_
 
         #Abilities
         for x in range(3):
-            temp_array.append([index, 'Ability ' + str(x + 1), pokearray.ability_name_list[personal[0x18 + x]]])
+            #handles expanded 2-byte abilities, the 3 bytes used are 0 so shouldn't cause issues for vanilla
+            try:
+                temp_array.append([index, 'Ability ' + str(x + 1), pokearray.ability_name_list[personal[0x18 + x] + ((personal[0x53] >> x) & 0x1)]]) # for when hidin finishes fixing his thing(((personal[0x53]) if x == 0 else personal[0x1E + x - 1])  << 8)]])
+            except Exception as e:
+                print(f'Exception {e}.\nIndex {index}, Ability index {personal[0x18 + x] + (((personal[0x53]) if x == 0 else personal[0x1E + x - 1])  << 8)}')
+                
 
         #Egg Groups
         for x in range(2):
@@ -365,6 +370,7 @@ def build_total_output_array(pokearray, base_index = 0, target_index = 0, forme_
         temp_from = []
         #set values depending on generation
         line_length = 6 if pokearray.game in ('XY', 'ORAS') else 8
+
         for index_number, file in enumerate(pokearray.evolution):
             for offset in range(0, 8*line_length, line_length):
                 evolve_to_index = from_little_bytes_int(file[offset + 4:offset + 6])
@@ -581,8 +587,7 @@ def build_summary_output_array(pokearray):
 
         #Abilities
         for x in range(3):
-            temp_array.append(pokearray.ability_name_list[personal[0x18 + x]])
-
+            temp_array.append([index, 'Ability ' + str(x + 1), pokearray.ability_name_list[personal[0x18 + x] + ((personal[0x53] >> x) & 0x1)]]) # for when hidin finishes fixing his thing(((personal[0x53]) if x == 0 else personal[0x1E + x - 1])  << 8)]])
         
         #Special Z-Move
         if(pokearray.game in {'SM', 'USUM'}):
